@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apollo</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/Menu.js"></script>
+    <script src="js/Mapa.js"></script>
+    <script src="js/HUD.js"></script>
+    <script src="js/MasterMind.js"></script>
+</head>
+<body>
+   
+    <canvas id="tela" width="680" height="400px">Vamo melhorar</canvas>
+    
+    <script>
+        var tela;
+        var painelCtr;
+        var canvas = document.getElementById("tela"); 
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "black";
+//        canvas.addEventListener("mousedown", doMouseDown, false);
+        
+        var menu = new Menu();
+        var mapa = new Mapa();
+        var hud =  new HUD();
+        var controller = new Controller();
+        
+        window.setInterval(atualizarPlacar, 1000);
+        
+        function atualizarPlacar (){
+            if(tela == 2)
+                controller.valoresPlacar();
+        }
+        
+        function menuInicial (cor) {
+            menu.desenharFundo(ctx);
+            menu.desenharContraste(ctx);
+//            menu.desenharItensMenu(ctx, cor);
+            menu.desenharB1(ctx, cor);
+            menu.desenharB2(ctx, cor);
+            tela = 1;
+        }
+        
+        function desenharHud (v1, v2, v3) {
+            hud.desenharVoltar();
+            hud.desenharPlacar(v1, v2, v3);
+            hud.desenharValorBairros();
+        }
+        
+        function atualizarValores(){
+            ctx.save();
+            
+            ctx.fillStyle = "black";
+        
+            for(var i = 0; i < bairros.length; i++){
+                ctx.fillRect(bairros[i][0], bairros[i][1],
+                            bairros[i][2], bairros[i][3]);
+            };
+            
+            hud.desenharValorBairros();
+            
+            ctx.restore();
+            
+        }
+        
+        window.onload = function (){
+            menuInicial("green");   
+        }
+        
+        var g;
+        
+        canvas.onmousedown = function (){
+            var x = event.x;
+            var y = event.y;
+            
+            console.log(painelCtr);
+            
+            if (tela == 1){
+                var g = menu.verificarBotao(x,y);
+                if( g == 0){
+                    menu.desenharB1(ctx, "blue");
+
+                    canvas.onmouseup = function (){
+                        x = event.x;
+                        y = event.y;
+                        g = menu.verificarBotao(x,y);
+                        if(g == 0){
+                            mapa.desenharMapa();
+                            tela = 2;
+                        }else{
+                            menuInicial("green");
+                        };
+                };
+                    
+                }else if(g == 1){
+                    menu.desenharB2(ctx, "blue");
+                    canvas.onmouseup = function (){
+                        x = event.x;
+                        y = event.y;
+                        g = menu.verificarBotao(x,y);
+
+                        if(g == 1){
+                            console.log("xau");
+                            menuInicial("green");
+                        }else{
+                            menuInicial("green");
+                        }
+                    }
+                }
+                
+            }else if (tela == 2){
+                canvas.onmouseup = function (){
+                    hud.verificarHUD(x, y);
+                    var bc = mapa.verificarMapa(x, y);
+                    
+                    if(bc != null){
+                        hud.desenharPainel(bc);
+                    };
+                };
+            };
+        };
+        
+//        canvas.onclick = function (){
+//            
+//            if (tela == 1){
+//                if (menu.verificarBotao(x, y) == 0){
+//                    menuInicial("blue");
+//                    mapa.desenharMapa();
+//                    hud.desenharHUD();
+//                    tela = 2;
+//                };
+//            }else if (tela == 2){
+//                hud.verificarHUD(x, y);
+//                var bc = mapa.verificarMapa(x, y);
+//                if(bc != null){
+//                    hud.desenharPainel(bc);
+//                };
+//            };
+//        };
+        
+    </script>
+</body>
+</html>

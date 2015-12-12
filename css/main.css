@@ -1,0 +1,7 @@
+body, html, canvas {
+    margin: auto;
+    padding: 0;
+}
+#tela{
+    display: table;
+}
